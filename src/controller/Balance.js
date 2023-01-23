@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import dayjs from "dayjs";
 
 export async function getBalance(req, res) {
     const checkSession = res.locals.session;
@@ -13,11 +14,11 @@ export async function getBalance(req, res) {
 }
 
 export async function newEntry(req, res) {
-    const { value, description, type } = req.body;
+    const { amount, description, isTrue } = req.body;
     const checkSession = res.locals.session;
 
     try {
-        await db.collection('balance').insertOne({ value, description, type, idUser: checkSession.idUser });
+        await db.collection('balance').insertOne({ day: dayjs().format('DD/MM'), amount, description, isTrue, idUser: checkSession.idUser });
 
         return res.status(200).send("Entrada lançada com sucesso");
     } catch (err) {
